@@ -145,9 +145,9 @@ export default function AddListingPage() {
                 <Label>Category</Label>
                 <select name="categoryId" className="w-full p-2.5 border border-slate-200 rounded-md bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none" required>
                     <option value="">-- Select Category --</option>
-                    <option value="nature">Nature</option> 
-                    <option value="culinary">Culinary</option>
-                    <option value="history">History</option>
+                    <option value="alam">Nature</option> 
+                    <option value="kuliner">Culinary</option>
+                    <option value="sejarah">History</option>
                 </select>
               </div>
 

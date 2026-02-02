@@ -57,7 +57,7 @@ const LocationPicker = ({ onSelect }: { onSelect: (lat: number, lng: number) => 
 
   return position === null ? null : (
     <Marker position={position}>
-      <Popup>Lokasi Terpilih!</Popup>
+      <Popup>Selected Location!</Popup>
     </Marker>
   )
 }
@@ -96,7 +96,7 @@ const LeafletMap = ({
               <div className="text-center">
                 <b className="text-sm">{item.title}</b>
                 <br />
-                <span className="text-xs text-slate-500">Klik untuk detail</span>
+                <span className="text-xs text-slate-500">Click for details</span>
               </div>
             </Popup>
           </Marker>
@@ -105,7 +105,7 @@ const LeafletMap = ({
         {/* Jika tidak ada markers dan tidak mode input, tampilkan marker default */}
         {!onLocationSelect && markers.length === 0 && (
           <Marker position={center}>
-            <Popup>Pusat Barru</Popup>
+            <Popup>Sulawesi Center</Popup>
           </Marker>
         )}
 

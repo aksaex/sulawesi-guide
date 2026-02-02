@@ -120,9 +120,9 @@ export default function EditListingForm({ listing }: EditProps) {
                 <Label>Category</Label>
                 <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full p-2 border rounded-md" required>
                     <option value="">Select Category</option>
-                    <option value="nature">Nature</option> 
-                    <option value="culinary">Culinary</option>
-                    <option value="history">History</option>
+                    <option value="alam">Nature</option> 
+                    <option value="kuliner">Culinary</option>
+                    <option value="sejarah">History</option>
                 </select>
               </div>
 
