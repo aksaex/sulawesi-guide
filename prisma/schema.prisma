@@ -1,0 +1,135 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Supabase/Neon
+  url      = env("DATABASE_URL")
+}
+
+// --- ENUMS ---
+
+enum Role {
+  USER
+  CONTRIBUTOR
+  ADMIN
+}
+
+enum ListingType {
+  PLACE // Tempat Wisata, Resto, Hotel
+  EVENT // Konser, Festival
+}
+
+enum ListingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// --- MODELS ---
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  image         String?
+  role          Role      @default(USER)
+  
+  // Relasi
+  listings      Listing[] 
+  bookmarks     Bookmark[]
+  // Review dihapus dari sini karena kita pakai sistem Guest Review sementara ini
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Category {
+  id            String    @id @default(cuid())
+  name          String    @unique 
+  slug          String    @unique
+  icon          String?   
+  
+  listings      Listing[]
+}
+
+model Listing {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String        @db.Text
+  address       String
+  
+  // Fasilitas (Array of String)
+  facilities    String[]      @default([])
+  
+  // Lokasi
+  latitude      Float
+  longitude     Float
+  
+  // Status & Tipe
+  type          ListingType
+  status        ListingStatus @default(PENDING)
+  
+  // Field Event (Opsional)
+  startDate     DateTime?     
+  endDate       DateTime?
+  
+  // Info Tambahan (JSON)
+  info          Json?         
+  
+  // --- RELASI ---
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  
+  categoryId    String
+  category      Category      @relation(fields: [categoryId], references: [id])
+  
+  images        ListingImage[]
+  reviews       Review[]      // Relasi ke Review
+  bookmarks     Bookmark[]
+
+  // Statistik (Opsional, untuk pengembangan lanjut)
+  ratingAvg     Float         @default(0) 
+  reviewCount   Int           @default(0)
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([latitude, longitude]) 
+  @@index([status, type])
+  @@index([categoryId])
+}
+
+model ListingImage {
+  id        String   @id @default(cuid())
+  url       String   
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+// MODEL REVIEW (DISESUAIKAN UNTUK GUEST)
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1 - 5
+  comment   String   @db.Text
+  userName  String   // Nama tamu (Guest), karena belum ada login user umum
+  
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+}
