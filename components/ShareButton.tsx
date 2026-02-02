@@ -18,12 +18,11 @@ export default function ShareButton({ title, slug }: ShareProps) {
     // Di Vercel: https://domainkamu.com/listing/slug
     const url = `${window.location.origin}/listing/${slug}`
 
-    // 2. Cek apakah browser support Native Share (biasanya di HP)
     if (navigator.share) {
       try {
         await navigator.share({
           title: title,
-          text: `Cek tempat wisata keren ini: ${title}`,
+          text: `Check out these cool tourist spots: ${title}`,
           url: url,
         })
       } catch (err) {
